@@ -1,3 +1,7 @@
+-- SE FOSSE UTILIZAR ESSE SCRIPT PARA GERAR AS TABELAS NO NA BASE H2 TERIA QUE MUDAR O NOME DO ARQUIVO PARA
+    -- nome: data.sql
+-- Pois aí o hibernate entende esse nome de arquivo, mapeia ele e gera as tabelas na base
+
 CREATE TABLE CLIENTE (
     ID INTEGER PRIMARY KEY AUTO_INCREMENT,
     NOME VARCHAR(100)
