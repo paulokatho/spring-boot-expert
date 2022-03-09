@@ -27,11 +27,23 @@ public class VendasApplication {
 			todosClientes.forEach(System.out::println);
 			System.out.println("");
 
+			System.out.println("Imprimindo consulta HQL.");
+			System.out.println("");
 			String resposta = null;
 			boolean existe = clientes.existsByNome("Katho");
 			if(existe == true) resposta = "Sim";
 			else resposta = "Não";
 			System.out.println("Existe um cliente com o nome Katho? " + resposta);
+			System.out.println("");
+
+			List<Cliente> result = clientes.encontrarPorNome("Katho");
+			result.forEach(System.out::println);
+			System.out.println("");
+
+			System.out.println("Imprimindo consulta SQL NATIVE.");
+			System.out.println("");
+			List<Cliente> results = clientes.encontrarPeloNome("Mau");
+			results.forEach(System.out::println);
 			System.out.println("");
 
 
