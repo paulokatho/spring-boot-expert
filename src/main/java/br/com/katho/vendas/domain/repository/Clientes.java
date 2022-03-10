@@ -1,4 +1,4 @@
-package br.com.katho.vendas.domain.repositorio;
+package br.com.katho.vendas.domain.repository;
 
 import br.com.katho.vendas.domain.entity.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;

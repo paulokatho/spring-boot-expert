@@ -1,8 +1,7 @@
 package br.com.katho.vendas;
 
 import br.com.katho.vendas.domain.entity.Cliente;
-import br.com.katho.vendas.domain.repositorio.Clientes;
-import net.bytebuddy.implementation.bind.MethodDelegationBinder;
+import br.com.katho.vendas.domain.repository.Clientes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
