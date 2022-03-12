@@ -31,4 +31,7 @@ public interface Clientes extends JpaRepository<Cliente, Integer> {
     @Query(" delete from Cliente c where c.nome =:nome") //esse não é necessário implementar, pois o query methods já faz a query por baixo dos panos.
     @Modifying //NECESSÁRIO PARA TRANSACIONAR NA BASE DE DADOS (UPDATE, DELETE)
     void deleteByNome(String nome);
+
+    @Query(" select c from Cliente c left join fetch c.pedidos p on p.cd where c.id =:id  ")
+    Cliente findClientesFetchPedidos(Integer id);
 }

@@ -65,4 +65,13 @@ public class Pedido {
     public void setItens(Set<ItemPedido> itens) {
         this.itens = itens;
     }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", dataPedido=" + dataPedido +
+                ", total=" + total +
+                '}';
+    }
 }
