@@ -13,7 +13,7 @@ import java.util.List;
 public interface Clientes extends JpaRepository<Cliente, Integer> {
 
     //CONSULTA SQL NATIVE
-    @Query(value = " Select * from cliente c where c.nome like '%:nome%' ", nativeQuery = true)
+    @Query(value = " Select * from Cliente c where c.nome like '%:nome%' ", nativeQuery = true)
     List<Cliente> encontrarPeloNome(@Param("nome") String nome);
 
     //CONSULTA HQL
@@ -32,6 +32,6 @@ public interface Clientes extends JpaRepository<Cliente, Integer> {
     @Modifying //NECESSÁRIO PARA TRANSACIONAR NA BASE DE DADOS (UPDATE, DELETE)
     void deleteByNome(String nome);
 
-    @Query(" select c from Cliente c left join fetch c.pedidos p on p.cd where c.id =:id  ")
-    Cliente findClientesFetchPedidos(Integer id);
+    @Query(" select c from Cliente c left join fetch c.pedidos where c.id = :id ")
+    Cliente findClienteFetchPedidos(@Param ("id") Integer id);
 }

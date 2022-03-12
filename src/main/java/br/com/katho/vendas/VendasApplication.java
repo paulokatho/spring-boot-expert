@@ -4,6 +4,7 @@ import br.com.katho.vendas.domain.entity.Cliente;
 import br.com.katho.vendas.domain.entity.Pedido;
 import br.com.katho.vendas.domain.repository.Clientes;
 import br.com.katho.vendas.domain.repository.Pedidos;
+import ch.qos.logback.core.net.SyslogOutputStream;
 import ch.qos.logback.core.net.server.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -38,13 +39,13 @@ public class VendasApplication {
 
 			pedidos.save(p);
 
-			Cliente cliente = clientes.findClientesFetchPedidos(fulano.getId());
+			Cliente cliente = clientes.findClienteFetchPedidos(fulano.getId());
 			System.out.println(cliente);
 			System.out.println(cliente.getPedidos());
 
-
-			List<Cliente> result = clientes.encontrarPorNome("Fulano");
-			result.forEach(System.out::println);
+			System.out.println("Listando Pedidos de clientes do repository de pedidos.");
+			System.out.println("");
+			pedidos.findByCliente(fulano).forEach(System.out::println);
 
 //			System.out.println("Salvando clientes.");
 //			System.out.println("");

@@ -14,7 +14,7 @@ public class Cliente {
     @Column(name = "nome")
     private String nome;
 
-    @OneToMany(mappedBy = "cliente") //AQUI RETORNA TODOS OS PEDIDOS DESSE CLIENTE
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY) //AQUI RETORNA TODOS OS PEDIDOS DESSE CLIENTE
     private Set<Pedido> pedidos;
 
 
