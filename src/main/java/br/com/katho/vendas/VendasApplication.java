@@ -39,11 +39,13 @@ public class VendasApplication {
 
 			pedidos.save(p);
 
+			System.out.println("Listando Pedidos de clientes do repository de CLIENTES.");
+			System.out.println("");
 			Cliente cliente = clientes.findClienteFetchPedidos(fulano.getId());
 			System.out.println(cliente);
 			System.out.println(cliente.getPedidos());
 
-			System.out.println("Listando Pedidos de clientes do repository de pedidos.");
+			System.out.println("Listando Pedidos de clientes do repository de PEDIDOS.");
 			System.out.println("");
 			pedidos.findByCliente(fulano).forEach(System.out::println);
 
