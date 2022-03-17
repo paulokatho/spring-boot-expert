@@ -3,10 +3,13 @@ package br.com.katho.vendas.rest.controller;
 import br.com.katho.vendas.domain.entity.Cliente;
 import br.com.katho.vendas.domain.repository.Clientes;
 import org.apache.coyote.Response;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -63,6 +66,21 @@ public class ClienteController {
                 }).orElseGet( () -> ResponseEntity.notFound().build());
         //acima é um suplier "() ->". Ela é uma classe funcional que tem um método que não tem nenhum parametro no "()"
         //e retorna qq coisa depois do "->"
+    }
+
+    @GetMapping
+    // ESSE MÉTODO RETORNA TODOS OS REGISTROS BASEADOS NO FILTRO (ATRIBUTOS) QUE VEM NO OBJETO (Cliente filtro)
+    public ResponseEntity find(Cliente filtro) {
+        ExampleMatcher matcher = ExampleMatcher
+                                    .matching()
+                                    .withIgnoreCase()
+                                    .withStringMatcher(
+                                            ExampleMatcher.StringMatcher.CONTAINING);
+
+        Example example = Example.of(filtro, matcher);
+        List<Cliente> lista = clientes.findAll(example);
+
+        return ResponseEntity.ok(lista);
     }
 
 }
