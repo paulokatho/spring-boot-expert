@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("api/clientes")
 public class ClienteController {
 
@@ -35,15 +35,15 @@ public class ClienteController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity save(@RequestBody Cliente cliente) {
-        return ResponseEntity.ok(cliente);
+    public Cliente save(@RequestBody Cliente cliente) {
+        return clientes.save(cliente);
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         clientes.findById(id)
-                .map(cliente -> {   
+                .map(cliente -> {
                         clientes.delete(cliente);
                         return cliente;
                 })
