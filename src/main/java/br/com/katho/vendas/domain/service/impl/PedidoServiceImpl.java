@@ -56,8 +56,8 @@ public class PedidoServiceImpl implements PedidoService {
         }
 
         return items
-                .stream()
-                .map( dto -> {
+                .stream() //essa primeira stream é uma stream de DTO's que está sendo convertida para uma stream de <ItemPedido> e depois
+                .map( dto -> { //Método map da stream retorna uma nova stream (stream contendo os novos items = ItemPedido e como faço isso?(com o .collect() lá embaixo
                     Integer idProduto = dto.getProduto();
                     Produto produto = produtosRepository
                             .findById(idProduto)
@@ -71,7 +71,7 @@ public class PedidoServiceImpl implements PedidoService {
                     itemPedido.setPedido(pedido);
                     itemPedido.setProduto(produto);
                     return itemPedido;
-                }).collect(Collectors.toList());
+                }).collect(Collectors.toList()); //para poder retornar a conversão do DTO para a stream ItemPedido
 
     }
 }
