@@ -1,10 +1,20 @@
 package br.com.katho.vendas.rest.controller;
 
+import br.com.katho.vendas.domain.entity.ItemPedido;
 import br.com.katho.vendas.domain.entity.Pedido;
 import br.com.katho.vendas.domain.service.PedidoService;
+import br.com.katho.vendas.rest.dto.InformacaoItemPedidoDTO;
+import br.com.katho.vendas.rest.dto.InformacoesPedidoDTO;
 import br.com.katho.vendas.rest.dto.PedidoDTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -25,4 +35,37 @@ public class PedidoController {
         return pedido.getId();
     }
 
+    @GetMapping("{id}")
+    public InformacoesPedidoDTO getById(@PathVariable Integer id) {
+        return service
+                .obterPedidoCompleto(id)
+                .map(p -> converter(p) )
+                .orElseThrow(() ->
+                        new ResponseStatusException(NOT_FOUND, "Pedido não encontrado."));
+    }
+
+    private InformacoesPedidoDTO converter(Pedido pedido) {
+        return InformacoesPedidoDTO
+                .builder()
+                .codigo(pedido.getId())
+                .dataPedido(pedido.getDataPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                .cpf(pedido.getCliente().getCpf())
+                .total(pedido.getTotal())
+                .items(converter(pedido.getItens()))
+                .build();
+    }
+
+    private List<InformacaoItemPedidoDTO> converter(List<ItemPedido> itens) {
+        if(CollectionUtils.isEmpty(itens)){
+            return Collections.emptyList();
+        }
+        return itens.stream().map(
+                item -> InformacaoItemPedidoDTO
+                        .builder()
+                        .descricaoProduto(item.getProduto().getDescricao())
+                        .precoUnitario(item.getProduto().getPreco())
+                        .quantidade(item.getQuantidade())
+                        .build()
+        ).collect(Collectors.toList());
+    }
 }
