@@ -51,6 +51,7 @@ public class PedidoController {
                 .dataPedido(pedido.getDataPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
                 .cpf(pedido.getCliente().getCpf())
                 .total(pedido.getTotal())
+                .status(pedido.getStatus().name()) //O MÉTODO NAME RETORNA A STRING DO ATRIBUTO DO ENUM STATUS
                 .items(converter(pedido.getItens()))
                 .build();
     }

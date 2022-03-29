@@ -4,6 +4,7 @@ import br.com.katho.vendas.domain.entity.Cliente;
 import br.com.katho.vendas.domain.entity.ItemPedido;
 import br.com.katho.vendas.domain.entity.Pedido;
 import br.com.katho.vendas.domain.entity.Produto;
+import br.com.katho.vendas.domain.enums.StatusPedido;
 import br.com.katho.vendas.domain.repository.Clientes;
 import br.com.katho.vendas.domain.repository.ItemsPedido;
 import br.com.katho.vendas.domain.repository.Pedidos;
@@ -42,6 +43,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setTotal(dto.getTotal());
         pedido.setDataPedido(LocalDate.now());
         pedido.setCliente(cliente);
+        pedido.setStatus(StatusPedido.REALIZADO);
 
         List<ItemPedido> itemsPedido = converterItems(pedido, dto.getItems());
         repository.save(pedido);
