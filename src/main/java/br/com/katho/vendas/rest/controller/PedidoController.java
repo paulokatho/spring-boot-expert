@@ -2,7 +2,9 @@ package br.com.katho.vendas.rest.controller;
 
 import br.com.katho.vendas.domain.entity.ItemPedido;
 import br.com.katho.vendas.domain.entity.Pedido;
+import br.com.katho.vendas.domain.enums.StatusPedido;
 import br.com.katho.vendas.domain.service.PedidoService;
+import br.com.katho.vendas.rest.dto.AtualizacaoStatusPedidoDTO;
 import br.com.katho.vendas.rest.dto.InformacaoItemPedidoDTO;
 import br.com.katho.vendas.rest.dto.InformacoesPedidoDTO;
 import br.com.katho.vendas.rest.dto.PedidoDTO;
@@ -11,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +33,7 @@ public class PedidoController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Integer save( @RequestBody PedidoDTO dto ){
+    public Integer save( @RequestBody @Valid PedidoDTO dto ){
         Pedido pedido = service.salvar(dto);
         return pedido.getId();
     }
@@ -42,6 +45,14 @@ public class PedidoController {
                 .map(p -> converter(p) )
                 .orElseThrow(() ->
                         new ResponseStatusException(NOT_FOUND, "Pedido não encontrado."));
+    }
+
+    @PatchMapping("{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id,
+                             @RequestBody AtualizacaoStatusPedidoDTO dto) {
+        String novoStatus = dto.getNovoStatus();
+        service.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
     }
 
     private InformacoesPedidoDTO converter(Pedido pedido) {

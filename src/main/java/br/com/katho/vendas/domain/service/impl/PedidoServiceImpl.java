@@ -10,6 +10,7 @@ import br.com.katho.vendas.domain.repository.ItemsPedido;
 import br.com.katho.vendas.domain.repository.Pedidos;
 import br.com.katho.vendas.domain.repository.Produtos;
 import br.com.katho.vendas.domain.service.PedidoService;
+import br.com.katho.vendas.exception.PedidoNaoEncontradoException;
 import br.com.katho.vendas.exception.RegraNegocioException;
 import br.com.katho.vendas.rest.dto.ItemPedidoDTO;
 import br.com.katho.vendas.rest.dto.PedidoDTO;
@@ -56,6 +57,18 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return repository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizaStatus(Integer id, StatusPedido statusPedido) {
+        repository
+                .findById(id)
+                .map(pedido -> {
+                    pedido.setStatus(statusPedido);
+                    return repository.save(pedido);
+                }).orElseThrow(() -> new PedidoNaoEncontradoException());
+        //DEPOIS DE CRIAR UMA EXCEPTION, É NECESSÁRIO REGISTRAR O HTTP STATUS NA CLASSE ApplicationControllerAdvice
     }
 
     private List<ItemPedido> converterItems(Pedido pedido, List<ItemPedidoDTO> items){
