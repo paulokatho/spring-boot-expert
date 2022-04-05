@@ -4,9 +4,19 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    //RESPONSAVEL POR ENCRIPTOGRAFAR E DESCRIPTOGRAFAR O PASSWORD A SENHA DO USUARIO
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+
+        // TODA VEZ QUE O USUARIO PASSA A SENHA O BCryptPasswordEncoder() GERA UM HASH E SEMPRE QUE A SENHA PASSADA SEJA A MESMA
+        // ESSE MÉTODO GERA UM HASH DIFERENTE. E POR ISSO É UMA CRIPTOGRAFIA BEM SEGURA
+    }
 
     // ESSE CARA VAI TRAZER OS OBJETOS QUE VÃO FAZER A AUTENTICAÇÃO DOS USUÁRIOS
     // DENTRO DO CONTEXTO DO SECURITY
