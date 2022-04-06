@@ -23,14 +23,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // VERIFICA SENHA DO USUARIO E A AUTENTICAÇÃO DELE
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
+        auth.inMemoryAuthentication()
+                .passwordEncoder(passwordEncoder())
+                .withUser("fulano")
+                .password(passwordEncoder().encode("123"))
+                .roles("USER"); // É COMO SE FOSSE OS PERFIS -> PERFIL É DE USUARIO, CAIXA, ADMINISTRADOR E ETC...
     }
 
     // ESSA PARTE É A DE AUTORIZAÇÃO E A IDEIA É:
     // PEGUE ESSE USUÁRIO QUE ESTÁ AUTENTICADO E VERIFIQUE SE ELE TEM AUTORIZAÇÃO PARA ACESSAR ESSA PÁGINA EX:
-    // API DE CLIENTES, QUEM TEM A "HOLE" E "AUTHORITY" PARA ACESSA A API DE CLIENTES
+    // API DE CLIENTES, QUEM TEM A "HOLE" E "AUTHORITY" PARA ACESSAr A API DE CLIENTES
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                    .antMatchers("/api/clientes/**")
+                        //.permitAll() // PERMITE TODAS AS REQUISIÇÕES E ACESSOS SEM PASSAR PELO LOGIN
+                        .authenticated()
+                .and()
+                .formLogin();
+
+        /**
+         * csrf() - é uma configuração que haja segurança entre uma aplicação e o backend, mas aqui estamos trabalhando com api rest - stateless
+         * .antMatchers() - aqui é definido quem acessa o quê dentro da aplicação
+         * .authenticated() - esse metodo verifica quem está autenticado, independente da HOLE ou AUTHORITY, com tanto que você esteja autenticado
+         * .and() - volta para a raiz do objeto http.
+         * .formLogin() - é o formulário de login do spring boot - você pode usar ele ou pode criar um form de login customizado
+         */
     }
 }
