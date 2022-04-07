@@ -44,9 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .hasAnyRole("USER", "ADMIN")
                     .antMatchers("/api/produtos**")
                         .hasAnyRole("ADMIN")
-
                 .and()
-                    .formLogin();
+                    .httpBasic();
 
         /**
          * csrf() - é uma configuração que haja segurança entre uma aplicação e o backend, mas aqui estamos trabalhando com api rest - stateless
