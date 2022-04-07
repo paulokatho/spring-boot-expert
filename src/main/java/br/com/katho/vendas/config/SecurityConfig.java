@@ -39,10 +39,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/api/clientes/**")
-                        //.permitAll() // PERMITE TODAS AS REQUISIÇÕES E ACESSOS SEM PASSAR PELO LOGIN
-                        .authenticated()
+                        .hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/api/pedidos/**")
+                        .hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/api/produtos**")
+                        .hasAnyRole("ADMIN")
+
                 .and()
-                .formLogin();
+                    .formLogin();
 
         /**
          * csrf() - é uma configuração que haja segurança entre uma aplicação e o backend, mas aqui estamos trabalhando com api rest - stateless
