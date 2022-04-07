@@ -1,5 +1,7 @@
 package br.com.katho.vendas.config;
 
+import br.com.katho.vendas.domain.service.impl.UsuarioServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private UsuarioServiceImpl usuarioService;
 
     //RESPONSAVEL POR ENCRIPTOGRAFAR E DESCRIPTOGRAFAR O PASSWORD A SENHA DO USUARIO
     public PasswordEncoder passwordEncoder() {
@@ -23,11 +28,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // VERIFICA SENHA DO USUARIO E A AUTENTICAÇÃO DELE
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .passwordEncoder(passwordEncoder())
-                .withUser("fulano")
-                .password(passwordEncoder().encode("123"))
-                .roles("USER"); // É COMO SE FOSSE OS PERFIS -> PERFIL É DE USUARIO, CAIXA, ADMINISTRADOR E ETC...
+        auth
+            .userDetailsService(usuarioService)
+            .passwordEncoder(passwordEncoder());
+
     }
 
     // ESSA PARTE É A DE AUTORIZAÇÃO E A IDEIA É:
