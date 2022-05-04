@@ -2,6 +2,7 @@ package br.com.katho.vendas.config;
 
 import br.com.katho.vendas.domain.service.impl.UsuarioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,6 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UsuarioServiceImpl usuarioService;
 
     //RESPONSAVEL POR ENCRIPTOGRAFAR E DESCRIPTOGRAFAR O PASSWORD A SENHA DO USUARIO
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
 
