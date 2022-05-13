@@ -2,6 +2,8 @@ package br.com.katho.vendas;
 
 import br.com.katho.vendas.domain.entity.Usuario;
 import ch.qos.logback.core.net.SyslogOutputStream;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,11 +38,41 @@ public class JwtService {
                 .compact(); //esse cara é que vai retornar uma string, transforma o token na string
     }
 
+    private Claims obterClaims(String token) throws ExpiredJwtException { //codifica o claims do token e se o token estiver expirado gera exception
+        return Jwts
+                .parser()
+                .setSigningKey(chaveAssinatura)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public boolean tokenValido(String token) {
+        try {
+            Claims claims = obterClaims(token);
+            Date dataExpiracao = claims.getExpiration();
+            LocalDateTime data = dataExpiracao.toInstant()
+                    .atZone(ZoneId.systemDefault()).toLocalDateTime(); //passando um date para um local date time
+            return !LocalDateTime.now().isAfter(data); //se a hora atual não for mais que a hora de expiração, então o token é valido. Não está expirado então
+        }catch (Exception e) {
+            return false;
+        }
+    }
+
+    //esse metodo vai dizer quem é o usuario que mandou o token
+    public String obterLoginUsuario(String token) throws ExpiredJwtException {
+        return (String) obterClaims(token).getSubject();
+    }
+
     public static void main(String[] args) {
         ConfigurableApplicationContext contexto = SpringApplication.run(VendasApplication.class); //inicia nossa aplicação dentro de um contexto
         JwtService service = contexto.getBean(JwtService.class); //a partir do contexto, conseguimos acesso a qq @Bean e nesse caso é o JwtService para poder injetar a <expiracao e chave de assinatura)
         Usuario usuario = Usuario.builder().login("fulano").build();
         String token = service.gerarToken(usuario);
         System.out.println(token);
+
+        boolean isTokenValido = service.tokenValido(token);
+        System.out.println("O token está válido? " + isTokenValido);
+
+        System.out.println(service.obterLoginUsuario(token));
     }
 }
