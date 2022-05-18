@@ -1,7 +1,7 @@
-package br.com.katho.vendas;
+package br.com.katho.vendas.security.jwt;
 
+import br.com.katho.vendas.VendasApplication;
 import br.com.katho.vendas.domain.entity.Usuario;
-import ch.qos.logback.core.net.SyslogOutputStream;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
