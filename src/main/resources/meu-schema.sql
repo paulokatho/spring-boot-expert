@@ -2,6 +2,16 @@
     -- nome: data.sql
 -- Pois aí o hibernate entende esse nome de arquivo, mapeia ele e gera as tabelas na base
 
+-- *****QUANDO FOR CRIAR NO MYSQL TEM QUE USAR ESSES 2 COMANDOS
+-- 1. CRIAR O DATABASE VENDAS
+-- 2. ATIVAR O BANCO VENDAS CRIADO
+-- *************************************************************
+
+-- create database vendas;
+-- use vendas;
+
+-- *************************************************************
+
 CREATE TABLE CLIENTE (
     ID INTEGER PRIMARY KEY AUTO_INCREMENT,
     NOME VARCHAR(100),
@@ -27,4 +37,11 @@ CREATE TABLE ITEM_PEDIDO (
     PEDIDO_ID INTEGER REFERENCES PEDIDO (ID),
     PRODUTO_ID INTEGER REFERENCES PRODUTO (ID),
     QUANTIDADE INTEGER
+);
+
+CREATE TABLE USUARIO(
+    ID INTEGER PRIMARY KEY AUTO_INCREMENT,
+    LOGIN VARCHAR(50),
+    SENHA VARCHAR(255),
+    ADMIN BOOL DEFAULT FALSE
 );
