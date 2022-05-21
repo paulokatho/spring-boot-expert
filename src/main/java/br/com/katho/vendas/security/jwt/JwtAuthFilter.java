@@ -38,7 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if(authorization != null && authorization.startsWith("Bearer")) { //Bearer é o que vem no inicio do header
             String token = authorization.split(" ") [1]; //dá um split onde tiver " " (espaço) e pega a posição 1 que é o token em si.
-            jwtService.tokenValido(token);
+            boolean isValid = jwtService.tokenValido(token);
 
             if(isValid) {
                 String loginUsuario = jwtService.obterLoginUsuario(token);

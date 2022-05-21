@@ -2,6 +2,7 @@ package br.com.katho.vendas.domain.service.impl;
 
 import br.com.katho.vendas.domain.entity.Usuario;
 import br.com.katho.vendas.domain.repository.UsuarioRepository;
+import br.com.katho.vendas.exception.SenhaInvalidaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,16 @@ public class UsuarioServiceImpl implements UserDetailsService {
     @Transactional
     public Usuario salvar(Usuario usuario) {
         return repository.save(usuario);
+    }
+
+    public UserDetails autenticar(Usuario usuario) {
+        UserDetails user = loadUserByUsername(usuario.getLogin());
+    //TEM QUE SEMPRE SEGUIR ESSA ORDEM: COMPARAR A VINDA DO FRONT COM A SENHA DO BANCO DE DADOS
+        boolean senhasBatem = encoder.matches(usuario.getSenha(), user.getPassword());
+        if(senhasBatem) {
+            return user;
+        }
+        throw new SenhaInvalidaException(); //se o usuario não estiver autenticado gera essa exception e não deixa o cara logar
     }
 
     // ESSE CARA SERVE PARA DEFINIR O CARREGAMENTO DE UM USUARIO ATRAVES DA BASE DE DADOS
