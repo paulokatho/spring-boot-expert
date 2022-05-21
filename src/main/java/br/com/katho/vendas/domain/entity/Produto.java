@@ -13,11 +13,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "produto")
+@Table(name = "PRODUTO")
 public class Produto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "descricao")
