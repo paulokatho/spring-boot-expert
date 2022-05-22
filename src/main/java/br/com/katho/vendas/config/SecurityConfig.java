@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -59,21 +60,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/api/clientes/**")
-                        .hasAnyRole("USER", "ADMIN")
-                    .antMatchers("/api/pedidos/**")
-                        .hasAnyRole("USER", "ADMIN")
-                    .antMatchers("/api/produtos**")
-                        .hasAnyRole("ADMIN")
-                    .antMatchers(HttpMethod.POST,"/api/usuarios/**")
-                        .permitAll()
-                    .anyRequest().authenticated()
+                .antMatchers("/api/clientes/**")
+                .hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/pedidos/**")
+                .hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/produtos**")
+                .hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/usuarios/**")
+                .permitAll()
+                .anyRequest().authenticated()
                 .and()
-                    .sessionManagement() //agora não temos mais sessão e assim gerenciamos nossas requisições
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //aqui deixamos nossas requests stateless e temos que passar o jwt filter
+                .sessionManagement() //agora não temos mais sessão e assim gerenciamos nossas requisições
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //aqui deixamos nossas requests stateless e temos que passar o jwt filter
                 .and()
-                    .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class) //o filter before coloca o jwt filter no contexto e depois usa o Username para verificar as roles que esse usuario tem acesso para manter no contexto que ele foi inserido
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class) //o filter before coloca o jwt filter no contexto e depois usa o Username para verificar as roles que esse usuario tem acesso para manter no contexto que ele foi inserido
         ;
+    }
+        @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.ignoring().antMatchers(
+                    "/v2/api-docs",
+                    "/configuration/ui",
+                    "/swagger-resources/**",
+                    "/configuration/security",
+                    "/swagger-ui.html",
+                    "/webjars/**");
+        }
+
         /**
          * csrf() - é uma configuração que haja segurança entre uma aplicação e o backend, mas aqui estamos trabalhando com api rest - stateless
          * .antMatchers() - aqui é definido quem acessa o quê dentro da aplicação
@@ -96,5 +109,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         Colocamos na classe Security config o nosso filtro para ele interceptar de fato as requisições e colocar o uauario
             e o token dentro do contexto de fato.
          */
-    }
+
 }
